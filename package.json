@@ -1,0 +1,50 @@
+{
+  "name": "uapi-soap",
+  "version": "0.0.1",
+  "description": "Javascript TravelPort uAPI SOAP Wrapper",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -t 3000 --recursive",
+    "cover": "nyc mocha -t 3000 --recursive",
+    "coveralls": "nyc report --reporter=text-lcov > coverage.lcov",
+    "fix": "eslint --fix src/ test/",
+    "lint": "eslint src/ test/",
+    "prepublish": "npm run lint && npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lifeofdubem/uapi-soap.git"
+  },
+  "keywords": [
+    "UAPI",
+    "TravelPort",
+    "Travel",
+    "Flight",
+    "Hotel",
+    "Car",
+    "Booking"
+  ],
+  "author": "Dubem <lifeofdubem@gmail.com>",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/lifeofdubem/uapi-soap/issues"
+  },
+  "homepage": "https://github.com/lifeofdubem/uapi-soap#readme",
+  "dependencies": {
+    "joi": "^14.3.1",
+    "node-errors-helpers": "^0.1.3",
+    "pretty-data": "^0.40.0",
+    "soap": "^0.26.0",
+    "xml-js": "^1.6.11"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^5.14.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "mocha": "^6.0.1",
+    "nyc": "^13.3.0",
+    "sinon": "^7.2.4",
+    "sinon-chai": "^3.3.0"
+  }
+}
