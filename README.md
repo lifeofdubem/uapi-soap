@@ -1,4 +1,10 @@
 # uapi-soap
+[![Build Status](https://travis-ci.org/lifeofdubem/uapi-soap.svg?branch=master)](https://travis-ci.org/lifeofdubem/uapi-soap)
+[![codecov](https://codecov.io/gh/lifeofdubem/uapi-soap/branch/master/graph/badge.svg)](https://codecov.io/gh/lifeofdubem/uapi-soap)
+[![npm version](https://badge.fury.io/js/uapi-soap.svg)](https://badge.fury.io/js/uapi-soap)
+[![Tag](https://img.shields.io/github/tag/lifeofdubem/uapi-soap.svg)](https://travis-ci.org/lifeofdubem/uapi-soap)
+
+
  TravelPort uAPI WSDL SOAP Wrapper :airplane: :mountain_railway: :hotel:
 
 Wrapper for [Travelport Universal API](https://developer.travelport.com/app/developer-network/universal-api).
