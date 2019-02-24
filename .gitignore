@@ -6,3 +6,4 @@ npm-debug.log
 /*.test.js
 .nyc_output
 *.log
+coverage.lcov
