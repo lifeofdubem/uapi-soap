@@ -1,6 +1,6 @@
 {
   "name": "uapi-soap",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Javascript TravelPort uAPI SOAP Wrapper",
   "main": "index.js",
   "scripts": {
