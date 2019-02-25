@@ -1,20 +1,19 @@
 const uAPI = require('../../index');
 const config = require('../../test/testconfig');
 
-uAPI.createAirService(
-  {
-    auth: config,
-    debug: false,
-    production: false,
-  },
-)
-  .then(AirService => {
+uAPI.createAirService({
+  auth: config,
+  debug: 0,
+  production: false,
+  parse: true,
+})
+  .then((airService) => {
     const params = {
       legs: [
         {
-          from: 'LWO',
-          to: 'JKT',
-          departureDate: '2019-07-19',
+          from: 'LOS',
+          to: 'IST',
+          departureDate: '2019-06-10',
         },
         {
           from: 'JKT',
@@ -39,12 +38,10 @@ uAPI.createAirService(
       },
     };
 
-    AirService.shop(params)
+    airService.shop(params)
       .then(
         res => console.log(res),
         err => console.log(err),
       );
   })
-
-
-
+  .catch(err => console.error('Unable To Create Service \n', err));

@@ -1,49 +1,55 @@
+const _ = require('lodash');
+
 module.exports = {
-  lowfare: params => ({
-    attributes: {
-      TargetBranch: 'P7087541',
-    },
-    'common:BillingPointOfSaleInfo': {
-      attributes: {
-        OriginApplication: 'uAPI',
-      },
-    },
-    SearchAirLeg: {
-      SearchOrigin: {
-        'common:CityOrAirport': {
-          attributes: {
-            Code: params.legs[0].from,
-            PreferCity: true,
-          },
-        },
-      },
-      SearchDestination: {
-        'common:CityOrAirport': {
-          attributes: {
-            Code: params.legs[0].to,
-            PreferCity: true,
-          },
-        },
-      },
-      SearchDepTime: {
+  lowfare: (params) => {
+    const obj = {};
+    // Add TargetBranch
+    _.assign(obj, { a: 'a' });
+    return {
+      'common:BillingPointOfSaleInfo': {
         attributes: {
-          PreferredTime: params.legs[0].departureDate,
+          OriginApplication: 'uAPI',
         },
       },
-    },
-    AirSearchModifiers: {
-      PreferredProviders: {
-        'common:Provider': {
+      SearchAirLeg: {
+        SearchOrigin: {
+          'common:CityOrAirport': {
+            attributes: {
+              Code: params.legs[0].from + 's',
+              PreferCity: true,
+            },
+          },
+        },
+        SearchDestination: {
+          'common:CityOrAirport': {
+            attributes: {
+              Code: params.legs[0].to,
+              PreferCity: true,
+            },
+          },
+        },
+        SearchDepTime: {
           attributes: {
-            Code: params.provider || '1G',
+            PreferredTime: params.legs[0].departureDate,
           },
         },
       },
-    },
-    'common:SearchPassenger': {
-      attributes: {
-        Code: 'ADT',
+      AirSearchModifiers: {
+        PreferredProviders: {
+          'common:Provider': {
+            attributes: {
+              Code: params.provider || '1G',
+            },
+          },
+        },
       },
-    },
-  }),
+      'common:SearchPassenger': {
+        attributes: {
+          Code: 'ADT',
+        },
+      },
+    };
+
+    return obj;
+  },
 };

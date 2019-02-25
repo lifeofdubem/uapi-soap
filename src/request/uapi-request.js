@@ -32,6 +32,9 @@ module.exports = function uapiRequest(
   if (!service) {
     throw new RequestValidationError.ServiceUrlMissing();
   }
+  if (!auth || auth.targetBranch === undefined) {
+    throw new RequestValidationError.AuthDataMissing();
+  }
 
   return function serviceFunc(params) {
     if (debugMode) {
@@ -44,39 +47,44 @@ module.exports = function uapiRequest(
         return params;
       });
 
+    const handleSuccess = (result) => {
+      if (responseParser) { result = responseParser(result); }
+      if (debugMode) {
+        log('Response: ', pd.json(result));
+      }
+      return result;
+    };
+
+    const handleError = (error) => {
+      if (errorHandler) { error = errorHandler(error); }
+      if (debugMode) {
+        log('Error: ', pd.json(error));
+      }
+      return error;
+    };
+
     const sendRequest = payload => new Promise((resolve, reject) => {
+      // Add Target Branch
+      payload.attributes = payload.attributes || {};
+      payload.attributes.TargetBranch = auth.targetBranch;
       service(payload, (error, result, rawResponse, soapHeader, rawRequest) => {
         if (error) {
           if (debugMode >= 2) {
-            // log('Soap Header: ', pd.xml(soapHeader));
-            log('Request XML: ', pd.xml(rawRequest));
+            log('Request XML: \n', pd.xml(rawRequest));
+            log('Response XML: \n', pd.xml(rawResponse));
           }
 
-          if (debugMode) {
-            log('Error: ', pd.json(error));
-          }
-
-          return reject(pd.json(errorHandler(error)));// reject(pd.json(error))
+          return reject(handleError(error));
         }
 
         if (debugMode >= 2) {
-          log('Request XML: ', pd.xml(rawRequest));
-          log('Response XML: ', pd.xml(rawResponse));
+          log('Request XML: \n', pd.xml(rawRequest));
+          log('Response XML: \n', pd.xml(rawResponse));
         }
         return resolve(result);
       }, options);
     });
 
-    const handleSuccess = (result) => {
-      if (debugMode > 1) {
-        if (typeof result === 'string') {
-          log('Returning result', result);
-        } else {
-          log('Returning result', pd.json(result));
-        }
-      }
-      return result;
-    };
 
     return validateInput()
       .then(sendRequest)

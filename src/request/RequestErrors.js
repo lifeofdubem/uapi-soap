@@ -24,7 +24,6 @@ const RequestRuntimeError = createErrorClass(
   errorTypes.RuntimeError,
 );
 Object.assign(RequestRuntimeError, createErrorsList({
-  TemplateFileMissing: 'XML template not found for request',
   VersionParsingError: 'Error during parsing version of uapi',
   UnhandledError: 'Error during request. Please try again later',
   ResultsMissing: 'Missing results in response',

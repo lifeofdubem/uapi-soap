@@ -1,6 +1,6 @@
 const lowfareParser = fare => fare;
-const airErrors = err => err.root.Envelope;
+const airErrorParser = err => err.root.Envelope;
 module.exports = {
   lowfareParser,
-  airErrors,
+  airErrorParser,
 };

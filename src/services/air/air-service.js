@@ -1,11 +1,11 @@
 const uApiRequest = require('../../request/uapi-request');
-const parsers = require('./air-parser');
+let { lowfareParser, airErrorParser } = require('./air-parser');
 const validators = require('./air-validator');
 
 
-module.exports = function (settings) {
+module.exports = function service(settings) {
   const {
-    auth, debug, options, client,
+    auth, debug, options, client, parse,
   } = settings;
 
   const {
@@ -42,13 +42,18 @@ module.exports = function (settings) {
     FlightInfoPort,
     FlightDetailsPort,
   } = client.FlightService;
+
+  if (!parse) {
+    lowfareParser = null;
+    airErrorParser = null;
+  }
   return {
     searchLowFares: uApiRequest(
       AirLowFareSearchPort.service,
       auth,
       validators.lowfare,
-      parsers.airErrors, // errorParse,
-      parsers.lowfareParser, // responsePerser,
+      airErrorParser, // errorParse,
+      lowfareParser, // responsePerser,
       debug,
       options,
     ),
