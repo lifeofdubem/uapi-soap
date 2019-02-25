@@ -14,6 +14,9 @@ module.exports = (setting) => {
 
       return {
         shop(options) {
+          options.provider = setting.auth.provider || '1G';
+          options.pcc = setting.auth.pcc;
+
           return service.searchLowFares(options);
         },
       };

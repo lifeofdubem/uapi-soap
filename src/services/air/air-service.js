@@ -1,7 +1,7 @@
 const uApiRequest = require('../../request/uapi-request');
-let { lowfareParser, airErrorParser } = require('./air-parser');
 const validators = require('./air-validator');
-
+const transformer = require('./air-transformer');
+let { lowfareParser, airErrorParser } = require('./air-parser');
 
 module.exports = function service(settings) {
   const {
@@ -52,6 +52,7 @@ module.exports = function service(settings) {
       AirLowFareSearchPort.service,
       auth,
       validators.lowfare,
+      transformer.lowfareSearchTransformer,
       airErrorParser, // errorParse,
       lowfareParser, // responsePerser,
       debug,

@@ -9,7 +9,8 @@ const {
 /**
  * basic function for requests/responses
  * @param  {string} service          service url for current response (gateway)
- * @param  {function} validateFunction function for validation
+ * @param  {function} validateFunction function for validating payload
+ * @param  {function} requestParserFunction function for parseing payload
  * @param  {function} errorHandler    function that gets SOAP:Fault object and handle error
  * @param  {function} responseParser    function for transforming json soap object to desire object
  * @param  {boolean} debugMode        true - log requests, false - dont
@@ -20,6 +21,7 @@ module.exports = function uapiRequest(
   service,
   auth,
   validateFunction,
+  requestParserFunction,
   errorHandler,
   responseParser,
   debugMode = 0,
@@ -41,11 +43,8 @@ module.exports = function uapiRequest(
       log('Input params ', pd.json(params));
     }
     const validateInput = () => Promise.resolve(params)
-      .then(validateFunction)
-      .then((validatedParams) => {
-        params = validatedParams || params;
-        return params;
-      });
+      .then(validateFunction);
+
 
     const handleSuccess = (result) => {
       if (responseParser) { result = responseParser(result); }
@@ -71,7 +70,7 @@ module.exports = function uapiRequest(
         if (error) {
           if (debugMode >= 2) {
             log('Request XML: \n', pd.xml(rawRequest));
-            log('Response XML: \n', pd.xml(rawResponse));
+            log('Response XML: \n', pd.xml(rawResponse || ''));
           }
 
           return reject(handleError(error));
@@ -87,6 +86,7 @@ module.exports = function uapiRequest(
 
 
     return validateInput()
+      .then(requestParserFunction)
       .then(sendRequest)
       .then(responseParser)
       .then(handleSuccess);
