@@ -73,11 +73,11 @@ uAPI.createAirService({
         language: 'FR', // ISO 639 two-character language codes are used to retrieve specific information in the requested languag
         // carriers: ['TK', 'KL'],
         traceId: 't4e2fd1f8-2221-4b6c-bb6e-cf05c367cf60race',
+        pos: 'My App',
         authorizedBy: 'uAPI',
         logLevel: 'TRACE', // TRACE , DEBUG , INFO , WARN , ERROR , FATAL Use to override the default logging level
         solutionResult: true, // Provider: 1G,1V,1P,1J,ACH-Indicates whether the response will contain Solution result (AirPricingSolution) or Non Solution Result (AirPricingPoints)
       },
-      application: 'My App',
     };
 
     airService.shop(params)
