@@ -1,14 +1,10 @@
 const chai = require('chai');
-const proxyquire = require('proxyquire');
-const sinon = require('sinon');
-const sinonChai = require('sinon-chai');
 
 const airPricingTransformer = require('../../../../src/services/air/transformers/air-pricing');
 
 const { expect } = chai;
-chai.use(sinonChai);
 
-describe('#AirPriceModifier', () => {
+describe('#AirPricing Transformer', () => {
   it('should return an empty object if pricing is not part of params', () => {
     const obj = airPricingTransformer({});
     expect(obj).to.be.deep.equal({});
@@ -257,29 +253,6 @@ describe('#AirPriceModifier', () => {
         },
       };
       expect(() => airPricingTransformer(params)).to.throw('promo supplier is required');
-    });
-  });
-
-  describe('#PCC', () => {
-    it('should add PCC to root attribtes', () => {
-      const params = { pcc: 'pcc', pricing: {} };
-      const expected = {
-        AirPricingModifiers: {
-          attributes: {
-            FaresIndicator: 'PublicFaresOnly',
-          },
-        },
-        PCC: {
-          'common:OverridePCC': {
-            attributes: {
-              ProviderCode: undefined,
-              PseudoCityCode: 'pcc',
-            },
-          },
-        },
-      };
-
-      expect(airPricingTransformer(params)).to.be.deep.equal(expected);
     });
   });
 });
