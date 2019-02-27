@@ -100,17 +100,5 @@ module.exports = (params) => {
     });
   }
 
-  // Add Point of Sale
-  if (params.pcc) {
-    root.PCC = {
-      'common:OverridePCC': {
-        attributes: {
-          PseudoCityCode: params.pcc,
-          ProviderCode: params.provider,
-        },
-      },
-    };
-  }
-
   return root;
 };
