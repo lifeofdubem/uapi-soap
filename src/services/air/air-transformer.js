@@ -8,9 +8,9 @@ module.exports = {
     _.assign(request, transformers.lowfarAttributes(params));
     _.assign(request, transformers.billingPointOfSaleInfo(params));
     _.assign(request, transformers.legs(params));
-    _.assign(request, transformers.airSearchModifiers(params));
+    _.assign(request, transformers.airSearch(params));
     _.assign(request, transformers.searchPassenger(params));
-    _.assign(request, transformers.airPricingModifiers(params));
+    _.assign(request, transformers.airPricing(params));
 
 
     return request;

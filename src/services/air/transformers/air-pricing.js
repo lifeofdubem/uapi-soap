@@ -4,10 +4,10 @@ module.exports = (params) => {
   if (!params.pricing) { return {}; }
 
   const {
-    eTicketability, currency, sellCheck, discountCard, promoCodes,
+    eTicketability, currency, sellCheck, promoCodes,
   } = params.pricing;
 
-  const pricingModifiers = {
+  const root = {
     AirPricingModifiers: {
       attributes: {
         FaresIndicator: 'PublicFaresOnly',
@@ -19,27 +19,27 @@ module.exports = (params) => {
   if (currency) {
     if (currency.length !== 3) {
       // TODO Add custom error class
-      throw new Error('Currency Code sholud be 3 character');
+      throw new Error('pricing.currency length should be equal 3');
     }
-    _.assign(pricingModifiers.AirPricingModifiers.attributes, {
+    _.assign(root.AirPricingModifiers.attributes, {
       CurrencyType: currency,
     });
   }
 
   // Add ETicketability
   if (eTicketability) {
-    if (!['Yes', 'No', 'Required,', 'Ticketless'].includes(eTicketability)) {
+    if (!['YES', 'NO', 'REQUIRED', 'TICKETLESS'].includes(eTicketability.toUpperCase())) {
       // TODO Add Custom Error Class
-      throw new Error('ETicketability permitted value ["Yes", "No", "Required", "Ticketless"]');
+      throw new Error('pricing.eTicketability permitted value ["Yes", "No", "Required", "Ticketless"]');
     }
-    _.assign(pricingModifiers.AirPricingModifiers.attributes, {
+    _.assign(root.AirPricingModifiers.attributes, {
       ETicketability: eTicketability,
     });
   }
 
-  // Add sellCheck
+  // Add SellCheck
   if (sellCheck) {
-    _.assign(pricingModifiers.AirPricingModifiers.attributes, {
+    _.assign(root.AirPricingModifiers.attributes, {
       SellCheck: sellCheck,
     });
   }
@@ -73,16 +73,24 @@ module.exports = (params) => {
 
   // Add Promo Codes
   if (promoCodes && promoCodes.length > 0) {
-    pricingModifiers.AirPricingModifiers.PromoCodes = {
+    root.AirPricingModifiers.PromoCodes = {
       PromoCode: [],
     };
     promoCodes.forEach((promoCode) => {
       const { code, provider, supplier } = promoCode;
-      if (!code || !provider || !supplier) {
+      if (!code) {
         // TODO add custom error class
-        throw new Error('Promo Code missing required param');
+        throw new Error('pricing.promoCodes[]: promo code is required');
       }
-      pricingModifiers.AirPricingModifiers.PromoCodes.PromoCode.push({
+      if (!provider) {
+        // TODO add custom error class
+        throw new Error('pricing.promoCodes[]: promo provider is required');
+      }
+      if (!supplier) {
+        // TODO add custom error class
+        throw new Error('pricing.promoCodes[]: promo supplier is required');
+      }
+      root.AirPricingModifiers.PromoCodes.PromoCode.push({
         attributes: {
           Code: code,
           ProviderCode: provider,
@@ -94,7 +102,7 @@ module.exports = (params) => {
 
   // Add Point of Sale
   if (params.pcc) {
-    pricingModifiers.PCC = {
+    root.PCC = {
       'common:OverridePCC': {
         attributes: {
           PseudoCityCode: params.pcc,
@@ -104,5 +112,5 @@ module.exports = (params) => {
     };
   }
 
-  return pricingModifiers;
+  return root;
 };

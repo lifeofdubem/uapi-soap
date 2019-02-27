@@ -5,7 +5,7 @@ module.exports = (params) => {
   if (!modifiers) {
     return {};
   }
-  const searchModiiers = {
+  const root = {
     AirSearchModifiers: {
       attributes: {
       },
@@ -21,21 +21,21 @@ module.exports = (params) => {
 
   // Add Max Connection Time
   if (modifiers.maxConnectionTime) {
-    _.assign(searchModiiers.AirSearchModifiers.attributes, {
+    _.assign(root.AirSearchModifiers.attributes, {
       MaxConnectionTime: modifiers.maxConnectionTime,
     });
   }
 
   // Add Max Journey Time
   if (modifiers.maxJourneyTime) {
-    _.assign(searchModiiers.AirSearchModifiers.attributes, {
+    _.assign(root.AirSearchModifiers.attributes, {
       MaxJourneyTime: modifiers.maxJourneyTime,
     });
   }
 
   // Add PreferNonStop
   if (modifiers.preferNonStop) {
-    _.assign(searchModiiers.AirSearchModifiers.attributes, {
+    _.assign(root.AirSearchModifiers.attributes, {
       PreferNonStop: modifiers.preferNonStop,
     });
   }
@@ -47,14 +47,14 @@ module.exports = (params) => {
       // TODO create custom error class
       throw new Error('Distance Unit enum ["MI", "KM"]');
     }
-    _.assign(searchModiiers.AirSearchModifiers.attributes, {
+    _.assign(root.AirSearchModifiers.attributes, {
       DistanceType: distanceUnit,
     });
   }
 
   // Add IncludeExtraSolutions
   if (modifiers.includeExtraSolutions || modifiers.searchWeekends) {
-    _.assign(searchModiiers.AirSearchModifiers.attributes, {
+    _.assign(root.AirSearchModifiers.attributes, {
       SearchWeekends: true,
 
       IncludeExtraSolutions: modifiers.includeExtraSolutions || false,
@@ -64,7 +64,7 @@ module.exports = (params) => {
 
   // Add Max Results
   if (modifiers.maxResults) {
-    _.assign(searchModiiers.AirSearchModifiers.attributes, {
+    _.assign(root.AirSearchModifiers.attributes, {
       MaxSolutions: modifiers.maxResults,
     });
   }
@@ -72,11 +72,11 @@ module.exports = (params) => {
 
   // Add Permitted Carries
   if (modifiers.carriers && modifiers.carriers.length) {
-    searchModiiers.AirSearchModifiers.PermittedCarriers = {
+    root.AirSearchModifiers.PermittedCarriers = {
       'common:Carrier': [],
     };
     modifiers.carriers.forEach((carrier) => {
-      searchModiiers.AirSearchModifiers.PermittedCarriers['common:Carrier'].push({
+      root.AirSearchModifiers.PermittedCarriers['common:Carrier'].push({
         attributes: {
           Code: carrier,
         },
@@ -88,11 +88,11 @@ module.exports = (params) => {
   if (modifiers.cabins && modifiers.cabins.length) {
     // AconstirLegModifiers = {};
 
-    searchModiiers.AirSearchModifiers.PreferredCabins = {
+    root.AirSearchModifiers.PreferredCabins = {
       'common:CabinClass': [],
     };
     modifiers.cabins.forEach((cabin) => {
-      searchModiiers.AirSearchModifiers.PreferredCabins['common:CabinClass'].push({
+      root.AirSearchModifiers.PreferredCabins['common:CabinClass'].push({
         attributes: {
           Type: cabin,
         },
@@ -102,7 +102,7 @@ module.exports = (params) => {
 
   // Add  Non Stop Direct NonStopDirects
   if (modifiers.nonStop) {
-    searchModiiers.AirSearchModifiers.FlightType = {
+    root.AirSearchModifiers.FlightType = {
       attributes: {
         NonStopDirects: modifiers.nonStop,
       },
@@ -110,5 +110,5 @@ module.exports = (params) => {
     };
   }
 
-  return searchModiiers;
+  return root;
 };
