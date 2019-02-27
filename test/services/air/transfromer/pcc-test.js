@@ -20,4 +20,10 @@ describe('#PCC Transformer', () => {
 
     expect(pccTransformer(params)).to.be.deep.equal(expected);
   });
+
+  it('should return an empty object if pcc is undefined', () => {
+    expect(pccTransformer({})).to.be.deep.equal({});
+    expect(pccTransformer({ pcc: '' })).to.be.deep.equal({});
+    expect(pccTransformer({ pcc: undefined })).to.be.deep.equal({});
+  });
 });

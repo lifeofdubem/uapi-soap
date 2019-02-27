@@ -1,5 +1,5 @@
 module.exports = (params) => {
-  if (!params.pcc) return {};
+  if (!params.pcc) { return {}; }
   // Add Point of Sale
 
   return {
