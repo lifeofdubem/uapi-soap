@@ -11,6 +11,7 @@ module.exports = {
     _.assign(request, transformers.airSearch(params));
     _.assign(request, transformers.searchPassenger(params));
     _.assign(request, transformers.airPricing(params));
+    _.assign(request, transformers.pcc(params));
 
 
     return request;
