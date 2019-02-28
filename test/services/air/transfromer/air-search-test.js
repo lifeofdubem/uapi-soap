@@ -125,7 +125,7 @@ describe('#AirSerchModifier Transferformer', () => {
       const expected = {
         AirSearchModifiers: {
           attributes: {
-            DistanceType: "MI",
+            DistanceType: 'MI',
           },
           PreferredProviders: {
             'common:Provider': {
@@ -145,7 +145,7 @@ describe('#AirSerchModifier Transferformer', () => {
       const expected = {
         AirSearchModifiers: {
           attributes: {
-            DistanceType: "KM",
+            DistanceType: 'KM',
           },
           PreferredProviders: {
             'common:Provider': {
@@ -165,7 +165,7 @@ describe('#AirSerchModifier Transferformer', () => {
       const expected1 = {
         AirSearchModifiers: {
           attributes: {
-            DistanceType: "KM",
+            DistanceType: 'KM',
           },
           PreferredProviders: {
             'common:Provider': {
@@ -180,7 +180,7 @@ describe('#AirSerchModifier Transferformer', () => {
       const expected2 = {
         AirSearchModifiers: {
           attributes: {
-            DistanceType: "MI",
+            DistanceType: 'MI',
           },
           PreferredProviders: {
             'common:Provider': {
@@ -195,7 +195,7 @@ describe('#AirSerchModifier Transferformer', () => {
       expect(airSerchModifier(params1)).to.be.deep.equal(expected1);
       expect(airSerchModifier(params2)).to.be.deep.equal(expected2);
     });
-    
+
     it('should throw an error if modifiers.distanceUnit not in "KM","MI"', () => {
       const params1 = { modifiers: { distanceUnit: 'K' } };
       const params2 = { modifiers: { distanceUnit: 'MII' } };
