@@ -21,6 +21,14 @@ module.exports = (params) => {
 
   // Add Max Connection Time
   if (modifiers.maxConnectionTime) {
+    if (modifiers.maxConnectionTime < 1) {
+      // TODO add custom error class
+      throw new Error('modifiers.maxConnectionTime can not be less than 1');
+    }
+    if (modifiers.maxConnectionTime > 99) {
+      // TODO add custom error class
+      throw new Error('modifiers.maxConnectionTime can not be greater than 99');
+    }
     _.assign(root.AirSearchModifiers.attributes, {
       MaxConnectionTime: modifiers.maxConnectionTime,
     });
@@ -28,6 +36,14 @@ module.exports = (params) => {
 
   // Add Max Journey Time
   if (modifiers.maxJourneyTime) {
+    if (modifiers.maxJourneyTime < 1) {
+      // TODO add custom error class
+      throw new Error('modifiers.maxJourneyTime can not be less than 1');
+    }
+    if (modifiers.maxJourneyTime > 99) {
+      // TODO add custom error class
+      throw new Error('modifiers.maxJourneyTime can not be greater than 99');
+    }
     _.assign(root.AirSearchModifiers.attributes, {
       MaxJourneyTime: modifiers.maxJourneyTime,
     });
@@ -42,10 +58,10 @@ module.exports = (params) => {
 
   // Add Distance Type
   if (modifiers.distanceUnit) {
-    const distanceUnit = modifiers.distanceUnit.toUpperCase();
+    const distanceUnit = String(modifiers.distanceUnit).toUpperCase();
     if (!['MI', 'KM'].includes(distanceUnit)) {
       // TODO create custom error class
-      throw new Error('Distance Unit enum ["MI", "KM"]');
+      throw new Error('pricing.distanceUnit can be either "KM" or "MI"');
     }
     _.assign(root.AirSearchModifiers.attributes, {
       DistanceType: distanceUnit,
