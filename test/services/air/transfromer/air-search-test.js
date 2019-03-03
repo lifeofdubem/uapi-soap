@@ -204,4 +204,27 @@ describe('#AirSerchModifier Transferformer', () => {
       expect(() => airSerchModifier(params2)).to.throw('distanceUnit can be either "KM" or "MI"');
     });
   });
+
+  describe('#IncludeExtraSolutions', () => {
+    it('should add IncludeExtraSolutions and SearchWeekends to AirSearchModifiers attributes if IncludeExtraSolutions = ture', () => {
+      const params = { modifiers: { includeExtraSolutions: true } };
+      const expected = {
+        AirSearchModifiers: {
+          attributes: {
+            IncludeExtraSolutions: true,
+            SearchWeekends: true,
+          },
+          PreferredProviders: {
+            'common:Provider': {
+              attributes: {
+                Code: '1G',
+              },
+            },
+          },
+        },
+      };
+
+      expect(airSerchModifier(params)).to.be.deep.equal(expected);
+    });
+  });
 });

@@ -1,50 +1,53 @@
 const _ = require('lodash');
 
 module.exports = (params) => {
+  const { modifiers } = params;
+  if (!modifiers) return {};
+
   const root = {
     attributes: {
-      TraceId: params.modifiers.traceId || 'Trace',
+      TraceId: modifiers.traceId || 'Trace',
     },
   };
 
   // Add Return Upsell Dare
-  if (params.modifiers.returnUpsellFare) {
+  if (modifiers.returnUpsellFare) {
     _.assign(root.attributes, {
-      ReturnUpsellFare: params.modifiers.returnUpsellFare,
+      ReturnUpsellFare: modifiers.returnUpsellFare,
     });
   }
 
   // Add Fare Rule
-  if (params.modifiers.fareInfoRules) {
+  if (modifiers.fareInfoRules) {
     _.assign(root.attributes, {
-      FareInfoRules: params.modifiers.fareInfoRules,
+      FareInfoRules: modifiers.fareInfoRules,
     });
   }
 
   // Add Solution Result
-  if (params.modifiers.solutionResult) {
+  if (modifiers.solutionResult) {
     _.assign(root.attributes, {
-      SolutionResult: params.modifiers.solutionResult,
+      SolutionResult: modifiers.solutionResult,
     });
   }
 
   // Add AuthorizedBy
-  if (params.modifiers.authorizedBy) {
+  if (modifiers.authorizedBy) {
     _.assign(root.attributes, {
-      AuthorizedBy: params.modifiers.authorizedBy,
+      AuthorizedBy: modifiers.authorizedBy,
     });
   }
 
   // Add LanguageCode
-  if (params.modifiers.language) {
+  if (modifiers.language) {
     _.assign(root.attributes, {
-      LanguageCode: params.modifiers.language,
+      LanguageCode: modifiers.language,
     });
   }
 
   // Add Log Level
-  if (params.modifiers.logLevel) {
-    const logLevel = params.modifiers.logLevel.toUpperCase();
+  if (modifiers.logLevel) {
+    const logLevel = modifiers.logLevel.toUpperCase();
     if (!['TRACE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL'].includes(logLevel)) {
       // TODO Add custom error class
       throw new Error('logLevel must be set to TRACE or DEBUG or INFO or WARN or ERROR or FATAL');

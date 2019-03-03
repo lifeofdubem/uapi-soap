@@ -60,8 +60,8 @@ uAPI.createAirService({
       modifiers: {
         cabins: ['Economy'], // Permitted Cabin for entire solution ['Economy', 'Business', 'First', 'PremiumEconomy', 'PremiumFirst'], Overwriten by leg cabin
 
-        maxJourneyTime: 99, // 	Maximum Journey Time for all legs (in hours) 0-99
-        maxConnectionTime: 99, //	The maximum anount of time (in minutes) that a solution can contain for connections between flights.
+        maxJourneyTime: 99, // Maximum Journey Time for all legs (in hours) 0-99
+        maxConnectionTime: 99, // The maximum anount of time (in minutes) that a solution can contain for connections between flights.
         preferNonStop: true, // The search request will ‘boost' the preference towards non-stops. If true then Non Stop flights will be preferred.
         distanceUnit: 'KM',
         includeExtraSolutions: true, // IF true then defaults to searchWeekends=true  regardless of it value

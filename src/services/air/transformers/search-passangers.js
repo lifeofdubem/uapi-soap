@@ -4,10 +4,11 @@ module.exports = (params) => {
   };
 
   // Minimum of 1 Adult required
-  params.passengers.adt = params.passengers.adt > 0 ? params.passengers.adt : 1;
+  let { passengers } = params;
+  if (!passengers) { passengers = { adt: 1 }; }
   const {
     adt, cnn, inf, ins,
-  } = params.passengers;
+  } = passengers;
   /* eslint-disable no-plusplus */
 
   // Add Adults
