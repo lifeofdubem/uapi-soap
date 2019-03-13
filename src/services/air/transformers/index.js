@@ -4,7 +4,7 @@ const legs = require('./legs');
 const pcc = require('./pcc');
 const searchPassenger = require('./search-passangers');
 const airPricing = require('./air-pricing');
-const lowfarAttributes = require('./lowfare-attributes');
+const attributes = require('./attributes');
 
 module.exports = {
   billingPointOfSaleInfo,
@@ -13,5 +13,5 @@ module.exports = {
   pcc,
   searchPassenger,
   airPricing,
-  lowfarAttributes,
+  attributes,
 };

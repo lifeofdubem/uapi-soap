@@ -8,4 +8,5 @@ module.exports = {
 
     return params;
   },
+  price: params => params,
 };

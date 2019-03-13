@@ -1,7 +1,7 @@
 const uApiRequest = require('../../request/uapi-request');
 const validators = require('./air-validator');
 const transformer = require('./air-transformer');
-let { lowfareParser, airErrorParser } = require('./air-parser');
+let { lowfareParser, airErrorParser, priceParser } = require('./air-parser');
 
 module.exports = function service(settings) {
   const {
@@ -46,6 +46,7 @@ module.exports = function service(settings) {
   if (!parse) {
     lowfareParser = null;
     airErrorParser = null;
+    priceParser = null;
   }
   return {
     searchLowFares: uApiRequest(
@@ -55,6 +56,16 @@ module.exports = function service(settings) {
       transformer.lowfareSearchTransformer,
       airErrorParser, // errorParse,
       lowfareParser, // responsePerser,
+      debug,
+      options,
+    ),
+    price: uApiRequest(
+      AirPricePort.service,
+      auth,
+      validators.price,
+      transformer.price,
+      airErrorParser, // errorParse,
+      priceParser, // responsePerser,
       debug,
       options,
     ),

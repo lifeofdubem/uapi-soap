@@ -6,7 +6,7 @@ module.exports = (params) => {
   }
 
   Object.keys(params.passengers).forEach((ageCategory) => {
-    const number = params.passengers[ageCategory];
+    // const number = params.passengers[ageCategory];
     if (Object.prototype.toString.call(ageCategory) !== '[object String]'
       || ageCategory.length !== 3
     ) {

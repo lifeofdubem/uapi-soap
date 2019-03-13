@@ -6,7 +6,7 @@ uAPI.createAirService({
   debug: 2,
   production: false,
   parse: true,
-  options: { timeout: 1000 },
+  // options: { timeout: 1000 },
 })
   .then((airService) => {
     const params = {

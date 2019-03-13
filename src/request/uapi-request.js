@@ -28,6 +28,7 @@ module.exports = function uapiRequest(
   options = {},
 
 ) {
+  // eslint-disable-next-line no-console
   const log = options.logFunction || console.log;
 
   // Performing checks
