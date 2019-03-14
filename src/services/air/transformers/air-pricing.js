@@ -10,7 +10,6 @@ module.exports = (params) => {
   const root = {
     AirPricingModifiers: {
       attributes: {
-        FaresIndicator: 'PublicFaresOnly',
       },
     },
   };

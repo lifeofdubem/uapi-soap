@@ -1,8 +1,8 @@
 const _ = require('lodash');
 
 module.exports = (params) => {
-  const { modifiers } = params;
-  if (!modifiers) return {};
+  let { modifiers } = params;
+  if (!modifiers) modifiers = {};
 
   const root = {
     attributes: {
@@ -11,9 +11,9 @@ module.exports = (params) => {
   };
 
   // Add Return Upsell Dare
-  if (modifiers.returnUpsellFare) {
+  if (String(modifiers.returnUpsellFare).toLocaleLowerCase() !== 'false') {
     _.assign(root.attributes, {
-      ReturnUpsellFare: modifiers.returnUpsellFare,
+      ReturnUpsellFare: modifiers.returnUpsellFare || true,
     });
   }
 

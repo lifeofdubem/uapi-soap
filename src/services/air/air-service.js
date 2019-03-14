@@ -5,7 +5,7 @@ let { lowfareParser, airErrorParser, priceParser } = require('./air-parser');
 
 module.exports = function service(settings) {
   const {
-    auth, debug, options, client, parse,
+    auth, debug, options, client, noParse,
   } = settings;
 
   const {
@@ -43,7 +43,7 @@ module.exports = function service(settings) {
     FlightDetailsPort,
   } = client.FlightService;
 
-  if (!parse) {
+  if (noParse) {
     lowfareParser = null;
     airErrorParser = null;
     priceParser = null;

@@ -89,7 +89,6 @@ module.exports = function uapiRequest(
     return validateInput()
       .then(requestParserFunction)
       .then(sendRequest)
-      .then(responseParser)
       .then(handleSuccess);
   };
 };
