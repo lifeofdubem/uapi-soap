@@ -1,57 +1,88 @@
-
-const mapSegments = (airSegment, bookingInfo) => {
-  const segments = airSegment.filter(segment => (
-    segment.attributes.Key === bookingInfo.attributes.SegmentRef));
-  // const segments = [];
-  // airSegment.forEach((segment) => {
-  //   if (segment.attributes.Key == bookingInfo.attributes.SegmentRef) {
-  //  segments.push(segment.attributes);
-  // }
-  // });
-  return segments;
-};
-const mapOptions = (flightOptions, airSegment) => {
-  const option = {};
-  let segments = [];
-  flightOptions.BookingInfo.forEach((bookingInfo) => {
-    segments = mapSegments(airSegment, bookingInfo);
-  });
-  option.segments = segments;
-  return option;
-};
-const mapDirections = (flightOption, airSegment) => {
-  const { attributes } = flightOption;
-  let { Option: options } = flightOption;
-
-  // const direction = [];
-  // const directionSolution = {};
-  // directionSolution.from = attributes.Origin;
-  // directionSolution.to = attributes.Destination;
-  if (!Array.isArray(options)) options = [options];
-  const directions = options.map(option => mapOptions(option, airSegment));
-
-  return directions;
+const getSegment = (key, segments) => {
+  let segment = {};
+  for (let i = 0; i < segments.length; i++) {
+    if (key === segments[i].attributes.Key) {
+      segment = segments[i].attributes;
+      break;
+    }
+  }
+  return segment;
 };
 
-module.exports = ({
+const lowfareParser = ({
   attributes,
-  FlightDetailsList,
-  AirSegmentList,
-  FareInfoList,
-  RouteList,
-  AirPricePointList,
-  BrandList,
+  FlightDetailsList: flightDetails,
+  AirSegmentList: airSegments,
+  FareInfoList: fareInfos,
+  RouteList: routes,
+  AirPricePointList: airPricePoints,
+  BrandList: brands,
 }) => {
+  // TODO Verify response are return
+  // Reset Attributes
+  airPricePoints = airPricePoints.AirPricePoint;
+  if (!Array.isArray(airPricePoints)) airPricePoints = [airPricePoints];
+
+  airSegments = airSegments.AirSegment;
+
   const solutions = [];
-  AirPricePointList.AirPricePoint.forEach((pricePoint) => {
-    const solution = {};
-    let { FlightOption: flightOption } = pricePoint.AirPricingInfo.FlightOptionsList;
-    if (!Array.isArray(flightOption)) flightOption = [flightOption];
+  for (let s = 0; s < airPricePoints.length; s++) {
+    const solution = {
+      price: airPricePoints[s].AirPricingInfo.attributes,
+      passengerFares: {},
+      bookingComponents: airPricePoints[s].attributes,
+      passengerCounts: airPricePoints[s].AirPricingInfo.PassengerType,
+      penalties: {
+        cancel: {
+          applies: airPricePoints[s].AirPricingInfo.CancelPenalty.attributes.PenaltyApplies,
+          noShow: airPricePoints[s].AirPricingInfo.CancelPenalty.attributes.NoShow,
+          percentage: airPricePoints[s].AirPricingInfo.CancelPenalty.Percentage,
+          amount: airPricePoints[s].AirPricingInfo.CancelPenalty.Amount,
+        },
+        change: {
+          applies: airPricePoints[s].AirPricingInfo.ChangePenalty.attributes.PenaltyApplies,
+          noShow: airPricePoints[s].AirPricingInfo.ChangePenalty.attributes.NoShow,
+          percentage: airPricePoints[s].AirPricingInfo.ChangePenalty.Percentage,
+          amount: airPricePoints[s].AirPricingInfo.ChangePenalty.Amount,
+        },
+      },
+      fareCalc: airPricePoints[s].AirPricingInfo.FareCalc,
+      directions: [],
+    };
 
-    const directions = flightOption.map(option => mapDirections(option, AirSegmentList.AirSegment));
+    // Map Directions
+    let airDirections = airPricePoints[s].AirPricingInfo.FlightOptionsList.FlightOption;
+    if (!Array.isArray(airDirections)) airDirections = [airDirections];
+    for (let d = 0; d < airDirections.length; d++) {
+      const options = [];
 
-    solution.directions = directions;
+      // Map Options
+      let airOptions = airDirections[d].Option;
+      if (!Array.isArray(airOptions)) airOptions = [airOptions];
+      for (let opt = 0; opt < airOptions.length; opt++) {
+        const option = {
+          from: airDirections[d].attributes.Origin,
+          to: airDirections[d].attributes.Destination,
+          platingCarrier: airPricePoints[s].AirPricingInfo.attributes.PlatingCarrier,
+          segments: [],
+        };
+
+        // Map Segments
+        let optionSegments = airOptions[opt].BookingInfo;
+        if (!Array.isArray(optionSegments)) optionSegments = [optionSegments];
+        for (let seg = 0; seg < optionSegments.length; seg++) {
+          const segment = getSegment(optionSegments[seg].attributes.SegmentRef, airSegments);
+          option.segments.push(segment);
+        }
+
+        options.push(option);
+      }
+
+      solution.directions.push(options);
+    }
+
     solutions.push(solution);
-  });
+  }
   return solutions;
 };
+module.exports = lowfareParser;

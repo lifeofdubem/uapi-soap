@@ -11,9 +11,13 @@ module.exports = (params) => {
   };
 
   // Add Return Upsell Dare
-  if (String(modifiers.returnUpsellFare).toLocaleLowerCase() !== 'false') {
+  if (String(modifiers.returnUpsellFare).toLocaleLowerCase() === 'false') {
     _.assign(root.attributes, {
-      ReturnUpsellFare: modifiers.returnUpsellFare || true,
+      ReturnUpsellFare: false,
+    });
+  } else {
+    _.assign(root.attributes, {
+      ReturnUpsellFare: true,
     });
   }
 

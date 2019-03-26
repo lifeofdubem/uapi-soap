@@ -14,7 +14,6 @@ describe('#AirPricing Transformer', () => {
     const expected = {
       AirPricingModifiers: {
         attributes: {
-          FaresIndicator: 'PublicFaresOnly',
         },
       },
     };
@@ -38,7 +37,6 @@ describe('#AirPricing Transformer', () => {
     const expected = {
       AirPricingModifiers: {
         attributes: {
-          FaresIndicator: 'PublicFaresOnly',
           CurrencyType: 'USD',
           ETicketability: 'Yes',
           SellCheck: true,
@@ -63,7 +61,6 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
-            FaresIndicator: 'PublicFaresOnly',
             CurrencyType: 'USD',
           },
         },
@@ -92,7 +89,6 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
-            FaresIndicator: 'PublicFaresOnly',
             ETicketability: 'Yes',
           },
         },
@@ -106,7 +102,6 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
-            FaresIndicator: 'PublicFaresOnly',
             ETicketability: 'No',
           },
         },
@@ -120,7 +115,6 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
-            FaresIndicator: 'PublicFaresOnly',
             ETicketability: 'Required',
           },
         },
@@ -134,7 +128,6 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
-            FaresIndicator: 'PublicFaresOnly',
             ETicketability: 'Ticketless',
           },
         },
@@ -164,7 +157,6 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
-            FaresIndicator: 'PublicFaresOnly',
             SellCheck: true,
           },
         },
@@ -178,7 +170,6 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
-            FaresIndicator: 'PublicFaresOnly',
           },
         },
       };
@@ -200,7 +191,6 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
-            FaresIndicator: 'PublicFaresOnly',
           },
           PromoCodes: {
             PromoCode: [
@@ -218,7 +208,6 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
-            FaresIndicator: 'PublicFaresOnly',
           },
         },
       };

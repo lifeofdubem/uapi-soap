@@ -35,6 +35,7 @@
             }
         ],
         "no-param-reassign": "off",
+        "no-plusplus": "off",
         "no-unused-vars": "warn"
     }
 }

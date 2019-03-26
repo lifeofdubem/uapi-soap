@@ -49,6 +49,10 @@ describe('#AirTransformer', () => {
             OriginApplication: 'uAPI',
           },
         },
+        attributes: {
+          ReturnUpsellFare: true,
+          TraceId: 'Trace',
+        },
 
       };
 
@@ -126,6 +130,10 @@ describe('#AirTransformer', () => {
             OriginApplication: 'uAPI',
           },
         },
+        attributes: {
+          ReturnUpsellFare: true,
+          TraceId: 'Trace',
+        },
 
       };
 
@@ -192,6 +200,10 @@ describe('#AirTransformer', () => {
             OriginApplication: 'uAPI',
           },
         },
+        attributes: {
+          ReturnUpsellFare: true,
+          TraceId: 'Trace',
+        },
       };
 
       expect(airTransformer.lowfareSearchTransformer(params)).to.be.deep.equal(expected);
@@ -247,16 +259,17 @@ describe('#AirTransformer', () => {
             OriginApplication: 'uAPI',
           },
         },
-
         AirPricingModifiers: {
           attributes: {
             CurrencyType: 'USD',
             ETicketability: 'Yes',
             SellCheck: true,
-            FaresIndicator: 'PublicFaresOnly',
           },
         },
-
+        attributes: {
+          ReturnUpsellFare: true,
+          TraceId: 'Trace',
+        },
       };
 
       expect(airTransformer.lowfareSearchTransformer(params)).to.be.deep.equal(expected);

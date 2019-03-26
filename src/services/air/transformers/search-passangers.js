@@ -4,7 +4,7 @@ module.exports = (params) => {
   };
 
   // Minimum of 1 Adult required
-  const { passengers } = params;
+  const passengers = params.passengers || {};
 
   if (!passengers.adt) { passengers.adt = 1; }
   const {
