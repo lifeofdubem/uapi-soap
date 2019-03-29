@@ -21,33 +21,29 @@ const penalityParser = (penality) => {
   return penalities;
 };
 
-const priceParser = (price) => {
-  const {
-    Key: key,
-    ApproximateTotalPrice: totalPrice,
-    ApproximateBasePrice: basePrice,
-    Taxes: taxes,
-    LatestTicketingTime: latestTicketingTime,
-    PricingMethod: pricingMethod,
-    Refundable: refundable,
-    ETicketability: eTicketability,
-    PlatingCarrier: platingCarrier,
-    Cat35Indicator: cat35Indicator,
-  } = price;
-
-  return {
-    key,
-    totalPrice,
-    basePrice,
-    taxes,
-    latestTicketingTime,
-    pricingMethod,
-    refundable,
-    eTicketability,
-    platingCarrier,
-    cat35Indicator,
-  };
-};
+const priceParser = ({
+  Key: key,
+  ApproximateTotalPrice: totalPrice,
+  ApproximateBasePrice: basePrice,
+  Taxes: taxes,
+  LatestTicketingTime: latestTicketingTime,
+  PricingMethod: pricingMethod,
+  Refundable: refundable,
+  ETicketability: eTicketability,
+  PlatingCarrier: platingCarrier,
+  Cat35Indicator: cat35Indicator,
+}) => ({
+  key,
+  totalPrice,
+  basePrice,
+  taxes,
+  latestTicketingTime,
+  pricingMethod,
+  refundable,
+  eTicketability,
+  platingCarrier,
+  cat35Indicator,
+});
 
 const passengerFareParser = (airPricingInfos) => {
   const prices = {};
@@ -62,53 +58,52 @@ const passengerFareParser = (airPricingInfos) => {
   return prices;
 };
 
-const segmentParser = (segment) => {
-  const {
-    Key: key,
-    Group: group,
-    Carrier: carrier,
-    FlightNumber: flightNumber,
-    Origin: origin,
-    Destination: destination,
-    DepartureTime: departureTime,
-    ArrivalTime: arrivalTime,
-    FlightTime: flightTime,
-    Distance: distance,
-    ETicketability: eTicketability,
-    Equipment: plane,
-    ChangeOfPlane: changeOfPlane,
-    ParticipantLevel: participantLevel,
-    LinkAvailability: linkAvailability,
-    PolledAvailabilityOption: polledAvailabilityOption,
-    OptionalServicesIndicator: optionalServicesIndicator,
-    AvailabilitySource: availabilitySource,
-    AvailabilityDisplayType: availabilityDisplayType,
-  } = segment;
-  return {
-    key,
-    origin,
-    destination,
-    group,
-    carrier,
-    flightNumber,
-    departureTime,
-    arrivalTime,
-    flightTime,
-    distance,
-    eTicketability,
-    plane,
-    changeOfPlane,
-    participantLevel,
-    linkAvailability,
-    polledAvailabilityOption,
-    optionalServicesIndicator,
-    availabilitySource,
-    availabilityDisplayType,
-  };
-};
+const segmentParser = ({
+  Key: key,
+  Group: group,
+  Carrier: carrier,
+  FlightNumber: flightNumber,
+  Origin: origin,
+  Destination: destination,
+  DepartureTime: departureTime,
+  ArrivalTime: arrivalTime,
+  FlightTime: flightTime,
+  Distance: distance,
+  ETicketability: eTicketability,
+  Equipment: plane,
+  ChangeOfPlane: changeOfPlane,
+  ParticipantLevel: participantLevel,
+  LinkAvailability: linkAvailability,
+  PolledAvailabilityOption: polledAvailabilityOption,
+  OptionalServicesIndicator: optionalServicesIndicator,
+  AvailabilitySource: availabilitySource,
+  AvailabilityDisplayType: availabilityDisplayType,
+}) => ({
+  key,
+  origin,
+  destination,
+  group,
+  carrier,
+  flightNumber,
+  departureTime,
+  arrivalTime,
+  flightTime,
+  distance,
+  eTicketability,
+  plane,
+  changeOfPlane,
+  participantLevel,
+  linkAvailability,
+  polledAvailabilityOption,
+  optionalServicesIndicator,
+  availabilitySource,
+  availabilityDisplayType,
+});
 
-const fareParser = (fare) => {
-  const { BaggageAllowance: baggageAllowance = {}, attributes } = fare;
+const fareParser = ({
+  BaggageAllowance: baggageAllowance = {},
+  attributes: { Key: uapiFareRef, FareBasis: fareBasis },
+}) => {
   const baggage = {
     numberOfPieces: baggageAllowance.NumberOfPieces,
     maxWeight: {},
@@ -119,26 +114,29 @@ const fareParser = (fare) => {
       unit: baggageAllowance.MaxWeight.attributes.Unit,
     });
   }
-  return { uapiFareRef: attributes.Key, fareBasis: attributes.FareBasis, baggage };
+  return { uapiFareRef, fareBasis, baggage };
 };
 const lowfareParser = ({
-  attributes,
+  attributes: {
+    TraceId: traceId,
+    TransactionId: transactionId,
+    CurrencyType: currency,
+    ResponseTime: responseTime,
+    DistanceUnits: distanceUnits,
+  },
   // FlightDetailsList: flightDetails,
-  AirSegmentList: airSegments,
-  FareInfoList: fareInfos,
+  AirSegmentList: { AirSegment: airSegments },
+  FareInfoList: { FareInfo: fareInfos },
   // RouteList: routes,
-  AirPricePointList: airPricePoints,
+  AirPricePointList: { AirPricePoint: airPricePoints },
   // BrandList: brands,
   NextResultReference: nextResultReference,
 }) => {
   // TODO Verify response are return
   // Ensure it is an array, because UAPI returns an object if single instance is available
-  airPricePoints = (!Array.isArray(airPricePoints.AirPricePoint)
-    ? [airPricePoints.AirPricePoint] : airPricePoints.AirPricePoint);
-
-  airSegments = (!Array.isArray(airSegments.AirSegment)
-    ? [airSegments.AirSegment] : airSegments.AirSegment);
-  fareInfos = !Array.isArray(fareInfos.FareInfo) ? [fareInfos.FareInfo] : fareInfos.FareInfo;
+  airPricePoints = !Array.isArray(airPricePoints) ? [airPricePoints] : airPricePoints;
+  airSegments = !Array.isArray(airSegments) ? [airSegments] : airSegments;
+  fareInfos = !Array.isArray(fareInfos) ? [fareInfos] : fareInfos;
 
   const segments = {};
   airSegments.forEach((segment) => {
@@ -150,13 +148,11 @@ const lowfareParser = ({
   });
 
   const solutions = [];
-  airPricePoints.forEach((airPricePoint) => {
-    let airPricingInfos = airPricePoint.AirPricingInfo;
-    if (!Array.isArray(airPricingInfos)) airPricingInfos = [airPricingInfos];
-
+  airPricePoints.forEach(({ AirPricingInfo: airPricingInfos, attributes: price }) => {
+    airPricingInfos = !Array.isArray(airPricingInfos) ? [airPricingInfos] : airPricingInfos;
 
     const solution = {
-      price: priceParser(airPricePoint.attributes),
+      price: priceParser(price),
       passengerFare: passengerFareParser(airPricingInfos),
       penalties: {
         cancel: penalityParser(airPricingInfos[0].CancelPenalty),
@@ -206,18 +202,14 @@ const lowfareParser = ({
     solutions.push(solution);
   });// End airPricePoints.forEach
 
-
-  const lowfareRes = {
-    traceId: attributes.TraceId,
-    transactionId: attributes.TransactionId,
-    responseTime: attributes.ResponseTime,
-    distanceUnits: attributes.DistanceUnits,
-    currency: attributes.CurrencyType,
+  return {
+    traceId,
+    transactionId,
+    responseTime,
+    distanceUnits,
+    currency,
     nextResultReference,
     solutions,
-
   };
-
-  return lowfareRes;
 };
 module.exports = lowfareParser;
