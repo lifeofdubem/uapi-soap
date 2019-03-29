@@ -1,88 +1,223 @@
-const getSegment = (key, segments) => {
-  let segment = {};
-  for (let i = 0; i < segments.length; i++) {
-    if (key === segments[i].attributes.Key) {
-      segment = segments[i].attributes;
-      break;
+const _ = require('lodash');
+
+const penalityParser = (penality) => {
+  let penalities = {};
+
+  if (penality) {
+    if (penality.attributes) {
+      penalities = {
+        applies: penality.attributes.PenaltyApplies,
+        noShow: penality.attributes.NoShow,
+        percentage: penality.Percentage,
+        amount: penality.Amount,
+      };
     }
+    penalities = {
+      percentage: penality.Percentage,
+      amount: penality.Amount,
+    };
   }
-  return segment;
+
+  return penalities;
 };
 
+const priceParser = (price) => {
+  const {
+    Key: key,
+    ApproximateTotalPrice: totalPrice,
+    ApproximateBasePrice: basePrice,
+    Taxes: taxes,
+    LatestTicketingTime: latestTicketingTime,
+    PricingMethod: pricingMethod,
+    Refundable: refundable,
+    ETicketability: eTicketability,
+    PlatingCarrier: platingCarrier,
+    Cat35Indicator: cat35Indicator,
+  } = price;
+
+  return {
+    key,
+    totalPrice,
+    basePrice,
+    taxes,
+    latestTicketingTime,
+    pricingMethod,
+    refundable,
+    eTicketability,
+    platingCarrier,
+    cat35Indicator,
+  };
+};
+
+const passengerFareParser = (airPricingInfos) => {
+  const prices = {};
+  airPricingInfos.forEach((airPricingInfo) => {
+    // const passengerType = airPricingInfo.PassengerType[0].attributes.Code.toLowerCase();
+    const passengers = (!Array.isArray(airPricingInfo.PassengerType)
+      ? [airPricingInfo.PassengerType] : airPricingInfo.PassengerType);
+    const passengerType = passengers[0].attributes.Code.toLowerCase();
+    prices[passengerType] = priceParser(airPricingInfo.attributes);
+    prices[passengerType].count = passengers.length;
+  });
+  return prices;
+};
+
+const segmentParser = (segment) => {
+  const {
+    Key: key,
+    Group: group,
+    Carrier: carrier,
+    FlightNumber: flightNumber,
+    Origin: origin,
+    Destination: destination,
+    DepartureTime: departureTime,
+    ArrivalTime: arrivalTime,
+    FlightTime: flightTime,
+    Distance: distance,
+    ETicketability: eTicketability,
+    Equipment: plane,
+    ChangeOfPlane: changeOfPlane,
+    ParticipantLevel: participantLevel,
+    LinkAvailability: linkAvailability,
+    PolledAvailabilityOption: polledAvailabilityOption,
+    OptionalServicesIndicator: optionalServicesIndicator,
+    AvailabilitySource: availabilitySource,
+    AvailabilityDisplayType: availabilityDisplayType,
+  } = segment;
+  return {
+    key,
+    origin,
+    destination,
+    group,
+    carrier,
+    flightNumber,
+    departureTime,
+    arrivalTime,
+    flightTime,
+    distance,
+    eTicketability,
+    plane,
+    changeOfPlane,
+    participantLevel,
+    linkAvailability,
+    polledAvailabilityOption,
+    optionalServicesIndicator,
+    availabilitySource,
+    availabilityDisplayType,
+  };
+};
+
+const fareParser = (fare) => {
+  const { BaggageAllowance: baggageAllowance = {}, attributes } = fare;
+  const baggage = {
+    numberOfPieces: baggageAllowance.NumberOfPieces,
+    maxWeight: {},
+  };
+  if (baggageAllowance.MaxWeight) {
+    _.assign(baggage.maxWeight, {
+      value: baggageAllowance.MaxWeight.attributes.Value,
+      unit: baggageAllowance.MaxWeight.attributes.Unit,
+    });
+  }
+  return { uapiFareRef: attributes.Key, fareBasis: attributes.FareBasis, baggage };
+};
 const lowfareParser = ({
   attributes,
-  FlightDetailsList: flightDetails,
+  // FlightDetailsList: flightDetails,
   AirSegmentList: airSegments,
   FareInfoList: fareInfos,
-  RouteList: routes,
+  // RouteList: routes,
   AirPricePointList: airPricePoints,
-  BrandList: brands,
+  // BrandList: brands,
+  NextResultReference: nextResultReference,
 }) => {
   // TODO Verify response are return
-  // Reset Attributes
-  airPricePoints = airPricePoints.AirPricePoint;
-  if (!Array.isArray(airPricePoints)) airPricePoints = [airPricePoints];
+  // Ensure it is an array, because UAPI returns an object if single instance is available
+  airPricePoints = (!Array.isArray(airPricePoints.AirPricePoint)
+    ? [airPricePoints.AirPricePoint] : airPricePoints.AirPricePoint);
 
-  airSegments = airSegments.AirSegment;
+  airSegments = (!Array.isArray(airSegments.AirSegment)
+    ? [airSegments.AirSegment] : airSegments.AirSegment);
+  fareInfos = !Array.isArray(fareInfos.FareInfo) ? [fareInfos.FareInfo] : fareInfos.FareInfo;
+
+  const segments = {};
+  airSegments.forEach((segment) => {
+    segments[segment.attributes.Key] = segmentParser(segment.attributes);
+  });
+  const fares = {};
+  fareInfos.forEach((fare) => {
+    fares[fare.attributes.Key] = fareParser(fare);
+  });
 
   const solutions = [];
-  for (let s = 0; s < airPricePoints.length; s++) {
+  airPricePoints.forEach((airPricePoint) => {
+    let airPricingInfos = airPricePoint.AirPricingInfo;
+    if (!Array.isArray(airPricingInfos)) airPricingInfos = [airPricingInfos];
+
+
     const solution = {
-      price: airPricePoints[s].AirPricingInfo.attributes,
-      passengerFares: {},
-      bookingComponents: airPricePoints[s].attributes,
-      passengerCounts: airPricePoints[s].AirPricingInfo.PassengerType,
+      price: priceParser(airPricePoint.attributes),
+      passengerFare: passengerFareParser(airPricingInfos),
       penalties: {
-        cancel: {
-          applies: airPricePoints[s].AirPricingInfo.CancelPenalty.attributes.PenaltyApplies,
-          noShow: airPricePoints[s].AirPricingInfo.CancelPenalty.attributes.NoShow,
-          percentage: airPricePoints[s].AirPricingInfo.CancelPenalty.Percentage,
-          amount: airPricePoints[s].AirPricingInfo.CancelPenalty.Amount,
-        },
-        change: {
-          applies: airPricePoints[s].AirPricingInfo.ChangePenalty.attributes.PenaltyApplies,
-          noShow: airPricePoints[s].AirPricingInfo.ChangePenalty.attributes.NoShow,
-          percentage: airPricePoints[s].AirPricingInfo.ChangePenalty.Percentage,
-          amount: airPricePoints[s].AirPricingInfo.ChangePenalty.Amount,
-        },
+        cancel: penalityParser(airPricingInfos[0].CancelPenalty),
+        change: penalityParser(airPricingInfos[0].ChangePenalty),
       },
-      fareCalc: airPricePoints[s].AirPricingInfo.FareCalc,
+      fareCalc: airPricingInfos[0].FareCalc,
       directions: [],
     };
 
     // Map Directions
-    let airDirections = airPricePoints[s].AirPricingInfo.FlightOptionsList.FlightOption;
+    let airDirections = airPricingInfos[0].FlightOptionsList.FlightOption;
     if (!Array.isArray(airDirections)) airDirections = [airDirections];
-    for (let d = 0; d < airDirections.length; d++) {
+    airDirections.forEach((airDirection) => {
       const options = [];
 
       // Map Options
-      let airOptions = airDirections[d].Option;
+      let airOptions = airDirection.Option;
       if (!Array.isArray(airOptions)) airOptions = [airOptions];
-      for (let opt = 0; opt < airOptions.length; opt++) {
+      airOptions.forEach((airOption) => {
         const option = {
-          from: airDirections[d].attributes.Origin,
-          to: airDirections[d].attributes.Destination,
-          platingCarrier: airPricePoints[s].AirPricingInfo.attributes.PlatingCarrier,
+          origin: airDirection.attributes.Origin,
+          destination: airDirection.attributes.Destination,
+          platingCarrier: airPricingInfos[0].attributes.PlatingCarrier,
+          travelTime: airOption.attributes.TravelTime,
           segments: [],
         };
 
         // Map Segments
-        let optionSegments = airOptions[opt].BookingInfo;
+        let optionSegments = airOption.BookingInfo;
         if (!Array.isArray(optionSegments)) optionSegments = [optionSegments];
-        for (let seg = 0; seg < optionSegments.length; seg++) {
-          const segment = getSegment(optionSegments[seg].attributes.SegmentRef, airSegments);
+        optionSegments.forEach((optionSegment) => {
+          const segment = segments[optionSegment.attributes.SegmentRef];
+          _.assign(segment, {
+            cabinClass: optionSegment.attributes.CabinClass,
+            seats: optionSegment.attributes.BookingCount,
+          });
+          _.assign(segment, fares[optionSegment.attributes.FareInfoRef]);
           option.segments.push(segment);
-        }
+        });
 
         options.push(option);
-      }
+      });
 
       solution.directions.push(options);
-    }
+    });
 
     solutions.push(solution);
-  }
-  return solutions;
+  });// End airPricePoints.forEach
+
+
+  const lowfareRes = {
+    traceId: attributes.TraceId,
+    transactionId: attributes.TransactionId,
+    responseTime: attributes.ResponseTime,
+    distanceUnits: attributes.DistanceUnits,
+    currency: attributes.CurrencyType,
+    nextResultReference,
+    solutions,
+
+  };
+
+  return lowfareRes;
 };
 module.exports = lowfareParser;
