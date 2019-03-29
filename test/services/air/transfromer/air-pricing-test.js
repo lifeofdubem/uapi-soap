@@ -5,19 +5,15 @@ const airPricingTransformer = require('../../../../src/services/air/transformers
 const { expect } = chai;
 
 describe('#AirPricing Transformer', () => {
-  it('should return an empty object if pricing is not part of params', () => {
-    const obj = airPricingTransformer({});
-    expect(obj).to.be.deep.equal({});
-  });
-
   it('should always add PublicFaresOnly attribute', () => {
     const expected = {
       AirPricingModifiers: {
         attributes: {
+          FaresIndicator: 'PublicFaresOnly',
         },
       },
     };
-    const obj = airPricingTransformer({ pricing: {} });
+    const obj = airPricingTransformer({});
 
     expect(obj).to.be.deep.equal(expected);
   });
@@ -39,6 +35,7 @@ describe('#AirPricing Transformer', () => {
         attributes: {
           CurrencyType: 'USD',
           ETicketability: 'Yes',
+          FaresIndicator: 'PublicFaresOnly',
           SellCheck: true,
 
         },
@@ -61,6 +58,7 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
+            FaresIndicator: 'PublicFaresOnly',
             CurrencyType: 'USD',
           },
         },
@@ -74,12 +72,12 @@ describe('#AirPricing Transformer', () => {
 
     it('should throw an error if currency is more than three characters', () => {
       const params = { pricing: { currency: 'USDS' } };
-      expect(() => airPricingTransformer(params)).to.throw('currency length should be equal 3');
+      expect(() => airPricingTransformer(params)).to.throw('length should be equal 3');
     });
 
     it('should throw an error if currency is less than three characters', () => {
-      const params = { pricing: { currency: 'USDS' } };
-      expect(() => airPricingTransformer(params)).to.throw('currency length should be equal 3');
+      const params = { pricing: { currency: 'US' } };
+      expect(() => airPricingTransformer(params)).to.throw('length should be equal 3');
     });
   });
 
@@ -89,6 +87,7 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
+            FaresIndicator: 'PublicFaresOnly',
             ETicketability: 'Yes',
           },
         },
@@ -102,6 +101,7 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
+            FaresIndicator: 'PublicFaresOnly',
             ETicketability: 'No',
           },
         },
@@ -115,6 +115,7 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
+            FaresIndicator: 'PublicFaresOnly',
             ETicketability: 'Required',
           },
         },
@@ -128,6 +129,7 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
+            FaresIndicator: 'PublicFaresOnly',
             ETicketability: 'Ticketless',
           },
         },
@@ -157,6 +159,7 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
+            FaresIndicator: 'PublicFaresOnly',
             SellCheck: true,
           },
         },
@@ -170,11 +173,12 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
+            FaresIndicator: 'PublicFaresOnly',
           },
         },
       };
 
-      expect(airPricingTransformer(params)).to.be.deep.equal(expected);
+      expect(airPricingTransformer(params)).to.deep.equal(expected);
     });
   });
 
@@ -191,6 +195,8 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
+            FaresIndicator: 'PublicFaresOnly',
+
           },
           PromoCodes: {
             PromoCode: [
@@ -208,6 +214,8 @@ describe('#AirPricing Transformer', () => {
       const expected = {
         AirPricingModifiers: {
           attributes: {
+            FaresIndicator: 'PublicFaresOnly',
+
           },
         },
       };

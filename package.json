@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha -t 20000 --recursive",
+    "test:watch": "mocha -t 20000 --watch --recursive",
     "cover": "nyc mocha -t 20000 --recursive",
     "coveralls": "nyc report --reporter=text-lcov > coverage.lcov",
     "fix": "eslint --fix src/ test/",

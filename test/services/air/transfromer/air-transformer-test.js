@@ -49,6 +49,11 @@ describe('#AirTransformer', () => {
             OriginApplication: 'uAPI',
           },
         },
+        AirPricingModifiers: {
+          attributes: {
+            FaresIndicator: 'PublicFaresOnly',
+          },
+        },
         attributes: {
           ReturnUpsellFare: true,
           TraceId: 'Trace',
@@ -130,6 +135,11 @@ describe('#AirTransformer', () => {
             OriginApplication: 'uAPI',
           },
         },
+        AirPricingModifiers: {
+          attributes: {
+            FaresIndicator: 'PublicFaresOnly',
+          },
+        },
         attributes: {
           ReturnUpsellFare: true,
           TraceId: 'Trace',
@@ -206,7 +216,7 @@ describe('#AirTransformer', () => {
         },
       };
 
-      expect(airTransformer.lowfareSearchTransformer(params)).to.be.deep.equal(expected);
+      expect(airTransformer.lowfareSearchTransformer(params)).to.deep.include(expected);
     });
 
     it('should transform one way flight with air pricing details', () => {
@@ -263,6 +273,8 @@ describe('#AirTransformer', () => {
           attributes: {
             CurrencyType: 'USD',
             ETicketability: 'Yes',
+            FaresIndicator: 'PublicFaresOnly',
+
             SellCheck: true,
           },
         },
@@ -271,8 +283,8 @@ describe('#AirTransformer', () => {
           TraceId: 'Trace',
         },
       };
-
-      expect(airTransformer.lowfareSearchTransformer(params)).to.be.deep.equal(expected);
+      const res = airTransformer.lowfareSearchTransformer(params);
+      expect(res).to.deep.equal(expected);
     });
   });
 });

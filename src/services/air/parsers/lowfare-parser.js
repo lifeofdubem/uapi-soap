@@ -133,6 +133,9 @@ const lowfareParser = ({
   NextResultReference: nextResultReference,
 }) => {
   // TODO Verify response are return
+  if (!airPricePoints || !airSegments || !fareInfos) {
+    throw new Error('UAPI lowfare  response invalid');
+  }
   // Ensure it is an array, because UAPI returns an object if single instance is available
   airPricePoints = !Array.isArray(airPricePoints) ? [airPricePoints] : airPricePoints;
   airSegments = !Array.isArray(airSegments) ? [airSegments] : airSegments;

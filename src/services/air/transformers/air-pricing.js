@@ -1,15 +1,14 @@
 const _ = require('lodash');
 
 module.exports = (params) => {
-  if (!params.pricing) { return {}; }
-
   const {
-    eTicketability, currency, sellCheck, promoCodes,
-  } = params.pricing;
+    eTicketability, currency, sellCheck, promoCodes, faresIndicator,
+  } = params.pricing || {};
 
   const root = {
     AirPricingModifiers: {
       attributes: {
+        FaresIndicator: 'PublicFaresOnly',
       },
     },
   };
@@ -18,10 +17,20 @@ module.exports = (params) => {
   if (currency) {
     if (currency.length !== 3) {
       // TODO Add custom error class
-      throw new Error('pricing.currency length should be equal 3');
+      throw new Error(`pricing.currency "${currency}" length should be equal 3`);
     }
     _.assign(root.AirPricingModifiers.attributes, {
       CurrencyType: currency,
+    });
+  }
+  // Add Currency
+  if (faresIndicator) {
+    if (['PublicFaresOnly'].includes(faresIndicator)) {
+      // TODO Add custom error class
+      throw new Error(`pricing.faresIndicator "${faresIndicator}" not in ['PublicFaresOnly']`);
+    }
+    _.assign(root.AirPricingModifiers.attributes, {
+      FaresIndicator: faresIndicator,
     });
   }
 
