@@ -11,11 +11,12 @@ const penalityParser = (penality) => {
         percentage: penality.Percentage,
         amount: penality.Amount,
       };
+    } else {
+      penalities = {
+        percentage: penality.Percentage,
+        amount: penality.Amount,
+      };
     }
-    penalities = {
-      percentage: penality.Percentage,
-      amount: penality.Amount,
-    };
   }
 
   return penalities;
@@ -150,11 +151,11 @@ const lowfareParser = ({
     fares[fare.attributes.Key] = fareParser(fare);
   });
 
-  const solutions = [];
+  const results = [];
   airPricePoints.forEach(({ AirPricingInfo: airPricingInfos, attributes: price }) => {
     airPricingInfos = !Array.isArray(airPricingInfos) ? [airPricingInfos] : airPricingInfos;
 
-    const solution = {
+    const result = {
       price: priceParser(price),
       passengerFare: passengerFareParser(airPricingInfos),
       penalties: {
@@ -199,10 +200,10 @@ const lowfareParser = ({
         options.push(option);
       });
 
-      solution.directions.push(options);
+      result.directions.push(options);
     });
 
-    solutions.push(solution);
+    results.push(result);
   });// End airPricePoints.forEach
 
   return {
@@ -212,7 +213,7 @@ const lowfareParser = ({
     distanceUnits,
     currency,
     nextResultReference,
-    solutions,
+    results,
   };
 };
 module.exports = lowfareParser;

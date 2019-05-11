@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const uAPI = require('../../index');
 const config = require('../../test/testconfig');
 
@@ -47,7 +48,9 @@ uAPI.createAirService({
       },
       pricing: {
         currency: 'USD',
-        eTicketability: 'Yes', // Request a search based on whether only E-ticketable fares are required. ['Yes', 'No', 'Required,', 'Ticketless'];
+        // Request a search based on whether only E-ticketable fares are required.
+        // ['Yes', 'No', 'Required,', 'Ticketless'];
+        eTicketability: 'Yes',
         sellCheck: true, // Checks if the segment is bookable before pricing
         pcc: 'PCC',
 
@@ -61,12 +64,18 @@ uAPI.createAirService({
         cabins: ['Economy'], // Permitted Cabin for entire solution ['Economy', 'Business', 'First', 'PremiumEconomy', 'PremiumFirst'], Overwriten by leg cabin
 
         maxJourneyTime: 99, // Maximum Journey Time for all legs (in hours) 0-99
-        maxConnectionTime: 99, // The maximum anount of time (in minutes) that a solution can contain for connections between flights.
-        preferNonStop: true, // The search request will ‘boost' the preference towards non-stops. If true then Non Stop flights will be preferred.
+        // The maximum amount of time (in minutes)
+        // that a solution can contain for connections between flights.
+        maxConnectionTime: 99,
+        // The search request will ‘boost' the preference towards non-stops.
+        // If true then Non Stop flights will be preferred.
+        preferNonStop: true,
         distanceUnit: 'KM',
-        includeExtraSolutions: true, // IF true then defaults to searchWeekends=true  regardless of it value
-        searchWeekends: true, // IF true then defaults to searchWeekends=true  regardless of it value,
-        maxResults: 15, // The maximum number of solutions to return.
+        // IF true then defaults to searchWeekends=true  regardless of it value
+        includeExtraSolutions: true,
+        // IF true then defaults to searchWeekends=true  regardless of it value,
+        searchWeekends: true,
+        maxResults: 15, // The maximum number of results to return.
         maxStops: -1, // The maximum number of stops within a connection.
         // nonStop: true, // Search only non stop flight
         returnUpsellFare: true,
@@ -76,7 +85,9 @@ uAPI.createAirService({
         pos: 'My App',
         authorizedBy: 'uAPI',
         logLevel: 'TRACE', // TRACE , DEBUG , INFO , WARN , ERROR , FATAL Use to override the default logging level
-        solutionResult: true, // Provider: 1G,1V,1P,1J,ACH-Indicates whether the response will contain Solution result (AirPricingSolution) or Non Solution Result (AirPricingPoints)
+        // Provider: 1G,1V,1P,1J,ACH-Indicates whether the response will contain Solution result
+        // (AirPricingSolution) or Non Solution Result (AirPricingPoints)
+        solutionResult: true,
       },
     };
 

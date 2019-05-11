@@ -28,6 +28,4 @@ function urls(region, production = true) {
   };
 }
 
-module.exports = function (region = 'emea', production = true) {
-  return urls(region, production);
-};
+module.exports = (region = 'emea', production = true) => urls(region, production);

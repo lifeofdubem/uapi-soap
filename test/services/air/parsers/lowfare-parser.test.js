@@ -22,8 +22,8 @@ describe('#LowfareParser', () => {
       expect(parsed.distanceUnits).to.not.be.empty;
       expect(parsed.currency).to.not.be.empty;
       expect(parsed.responseTime).to.not.be.empty;
-      expect(parsed.solutions).to.not.be.empty;
-      expect(parsed.solutions).to.be.an.instanceOf(Array);
+      expect(parsed.results).to.not.be.empty;
+      expect(parsed.results).to.be.an.instanceOf(Array);
     });
   });
 });
