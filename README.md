@@ -18,7 +18,6 @@ Inspired by [uapi-soap](https://raw.githubusercontent.com/Travelport-Ukraine/uap
 # Services
 <a name="services"></a>
 See the following services pages to take a detailed view
-
 * [`AirService`](docs/Air.md)
 * [`HotelService`](docs/Hotels.md)
 * [`UtilsService`](docs/Utils.md)
